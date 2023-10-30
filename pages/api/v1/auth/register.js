@@ -152,9 +152,13 @@ export default async function handler(req, res) {
       text: `Hello ${fullname},\n\nYou have recently created an account on ${process.env.MAIL_NAME}.\n\nTo verify your email address, please click the following link:\nhttps://craftlytics.theclashfruit.me/api/v1/auth/verify?token=${verificationToken}\n\nIf you did not create an account, please ignore this email.\nAccounts with unverified email addresses will get deleted after 2 weeks.\n\nRegards,\n${process.env.MAIL_NAME}`
     };
 
-    await mailer.sendMail(emailOptions, (e, i) => {
-      if (e)
-        throw new Error(e);
+    await new Promise((resolve, reject) => {
+      mailer.sendMail(emailOptions, (e, i) => {
+        if (e)
+          reject(e);
+
+        resolve(i);
+      });
     });
 
     res.status(201);
