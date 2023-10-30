@@ -2,21 +2,25 @@
 
 import {
   Button,
-  Card, Divider, Flex,
+  Card,
   Text,
   TextInput,
   Title,
 } from '@tremor/react';
 
 import {
-  InboxIcon, KeyIcon, UserIcon, AtSymbolIcon
+  InboxIcon
 } from '@heroicons/react/outline';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import Header from '@/components/Header';
 
 export default function Register() {
   return (
     <main className="h-[100svh] flex flex-col justify-center items-center">
+      <Header pageTitle="Reset Password" />
+
       <Card className="max-w-md mb-12">
         <Image className="mb-5 mx-auto" width={64} height={64} src="/logo.svg" alt="Craftlytics Logo" />
 

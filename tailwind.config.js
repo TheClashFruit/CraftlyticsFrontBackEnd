@@ -43,11 +43,11 @@ module.exports = {
         },
         'dark-tremor': {
           brand: {
-            faint: '#0B1229', 
-            muted: '#172554', 
-            subtle: '#1e40af', 
-            DEFAULT: '#3b82f6', 
-            emphasis: '#60a5fa', 
+            faint: '#1e1b4b',
+            muted: '#1e1b4b',
+            subtle: '#3730a3',
+            DEFAULT: '#6366f1',
+            emphasis: '#818cf8',
             inverted: '#030712', 
           },
           background: {
