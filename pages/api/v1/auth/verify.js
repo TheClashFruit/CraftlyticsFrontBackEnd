@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   // ---------------------------- //
 
   const user = await User.findOne({
-    token: token
+    verificationToken: token
   });
 
   if(!user) {
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
   try {
     await User.updateOne({
-      token: token
+      verificationToken: token
     }, {
       isVerified: true
     }, {
