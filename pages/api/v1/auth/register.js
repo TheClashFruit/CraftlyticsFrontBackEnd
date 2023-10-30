@@ -149,7 +149,7 @@ export default async function handler(req, res) {
       from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_USER}>`,
       to: email,
       subject: `[${process.env.MAIL_NAME}] Verify your email address.`,
-      text: `Hello ${fullname},\n\nYou have recently created an account on ${process.env.MAIL_NAME}.\n\nTo verify your email address, please click the following link:\nhttps://craftlytics.theclashfruit.me/verify?token=${verificationToken}\n\nIf you did not create an account, please ignore this email.\nAccounts with unverified email addresses will get deleted after 2 weeks.\n\nRegards,\n${process.env.MAIL_NAME}`
+      text: `Hello ${fullname},\n\nYou have recently created an account on ${process.env.MAIL_NAME}.\n\nTo verify your email address, please click the following link:\nhttps://craftlytics.theclashfruit.me/api/v1/auth/verify?token=${verificationToken}\n\nIf you did not create an account, please ignore this email.\nAccounts with unverified email addresses will get deleted after 2 weeks.\n\nRegards,\n${process.env.MAIL_NAME}`
     };
 
     await mailer.sendMail(emailOptions, (e, i) => {
