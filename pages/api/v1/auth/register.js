@@ -65,8 +65,7 @@ export default async function handler(req, res) {
 
   const userId = snowflake.getUniqueID();
   const safeUsername = username
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9 ]/g, '')
+    .replace(/[^a-zA-Z0-9]/g, '')
     .replace(' ', '_');
 
   // ---------------------------- //
@@ -159,7 +158,7 @@ export default async function handler(req, res) {
       res.json({
         error: 1,
         code: 'ERR_INTERNAL',
-        debug: e
+        debug: e.stackTrace
       });
 
       console.error(e);
