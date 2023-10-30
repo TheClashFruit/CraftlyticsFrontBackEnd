@@ -9,14 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/tailwindcss": "^0.2.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tremor/react": "^3.10.0",
     "@vercel/analytics": "^1.1.1",
+    "autoprefixer": "^10.4.16",
+    "bcrypt": "^5.1.1",
+    "jose": "^5.0.1",
     "mongoose": "^7.6.3",
     "next": "14.0.0",
+    "nodejs-snowflake": "^2.0.1",
+    "postcss": "^8.4.31",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwindcss": "^3.3.5"
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "14.0.0"
+    "eslint-config-next": "14.0.0",
+    "sass": "^1.69.5"
   }
 }
