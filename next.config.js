@@ -5,7 +5,8 @@ const nextConfig = {
     esmExternals: 'loose',
     serverComponentsExternalPackages: [
       'mongoose'
-    ]
+    ],
+    layers: true
   },
   webpack: (config) => {
     config.experiments = {
