@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import * as jose from 'jose';
 import User from '@/models/User';
 import {isEmailValid} from '@/lib/validationTools';
+import mailer from '@/lib/email';
 
 export default async function handler(req, res) {
   const { fullname, username, email, password } = req.body;
@@ -76,6 +77,7 @@ export default async function handler(req, res) {
   // ---------------------------- //
 
   const userId = snowflake.getUniqueID();
+
   const safeUsername = username
     .replace(/[^a-zA-Z0-9]/g, '')
     .replace(' ', '_');
@@ -119,11 +121,14 @@ export default async function handler(req, res) {
 
   const saltedPassword = await bcrypt.hash(password, 10);
 
+  const verificationToken = (Math.random() + 1).toString(36).substring(2);
+
   const userDocument = new User({
     id: userId,
-    fullName: username,
+    fullName: fullname,
     username: safeUsername,
     email: email,
+    verificationToken: verificationToken,
     password: saltedPassword
   });
 
@@ -139,6 +144,18 @@ export default async function handler(req, res) {
       .setIssuedAt()
       .setExpirationTime('30d')
       .sign(secret);
+
+    const emailOptions = {
+      from: `"${process.env.MAIL_NAME}" <${process.env.MAIL_USER}>`,
+      to: email,
+      subject: `[${process.env.MAIL_NAME}] Verify your email address.`,
+      text: `Hello ${fullname},\n\nYou have recently created an account on ${process.env.MAIL_NAME}.\n\nTo verify your email address, please click the following link:\nhttps://craftlytics.theclashfruit.me/verify?token=${verificationToken}\n\nIf you did not create an account, please ignore this email.\nAccounts with unverified email addresses will get deleted after 2 weeks.\n\nRegards,\n${process.env.MAIL_NAME}`
+    };
+
+    await mailer.sendMail(emailOptions, (e, i) => {
+      if (e)
+        throw new Error(e);
+    });
 
     res.status(201);
 

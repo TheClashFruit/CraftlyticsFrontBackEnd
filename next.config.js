@@ -6,7 +6,8 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose',
     serverComponentsExternalPackages: [
-      'mongoose'
+      'mongoose',
+      'nodemailer'
     ]
   },
   generateBuildId: () => {
