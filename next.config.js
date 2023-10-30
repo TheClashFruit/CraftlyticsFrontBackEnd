@@ -5,15 +5,7 @@ const nextConfig = {
     esmExternals: 'loose',
     serverComponentsExternalPackages: [
       'mongoose'
-    ],
-    layers: true
-  },
-  webpack: (config) => {
-    config.experiments = {
-      topLevelAwait: true
-    };
-
-    return config;
+    ]
   }
 };
 
