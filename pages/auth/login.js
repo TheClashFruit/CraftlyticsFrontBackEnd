@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Button,
+  Button, Callout,
   Card,
   Divider,
   Text,
@@ -10,6 +10,7 @@ import {
 } from '@tremor/react';
 
 import {
+  ExclamationIcon,
   InboxIcon,
   KeyIcon
 } from '@heroicons/react/outline';
@@ -17,11 +18,125 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
+import {useRouter} from 'next/router';
+import {setCookie} from 'cookies-next';
+import {isEmailValid, isUsernameValid} from '@/lib/validationTools';
+import {useState} from 'react';
 
 export default function Login() {
+  const router = useRouter();
+
+  const [ isLoading, setIsLoading ]   = useState(false);
+
+  const [ emailError, setEmailError ]       = useState('');
+  const [ passwordError, setPasswordError ] = useState('');
+
+  const [ serverError, setServerError ] = useState('');
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    const { email, password } = event.currentTarget;
+
+    const errors = {
+      email:    hasErrors({ email }),
+      password: hasErrors({ password })
+    };
+
+    if(
+      errors.fullname ||
+      errors.username ||
+      errors.email ||
+      errors.password
+    )
+      return;
+
+    setIsLoading(true);
+
+    const response = await fetch('/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email:    email.value,
+        password: password.value
+      })
+    });
+
+    const data = await response.json();
+
+    const currentDate = new Date();
+
+    currentDate.setDate(currentDate.getDate() + 30);
+
+    if(data.error === 0) {
+      setCookie('token', data.token, { maxAge: 60 * 60 * 24 * 30 });
+
+      await router.push('/');
+    } else {
+      switch (data.code) {
+        case 'ERR_USER_NOT_FOUND':
+          setEmailError('This email is not registered.');
+
+          break;
+        case 'ERR_PASSWORD_INVALID':
+          setPasswordError('Your password is invalid.');
+
+          break;
+        default:
+          setServerError(JSON.stringify(data, null, 2));
+
+          break;
+      }
+    }
+
+    setIsLoading(false);
+  };
+
+  const hasErrors = (data) => {
+    if(data.email)
+      if(data.email.value.length < 1) {
+        setEmailError('Your email cannot be empty.');
+
+        return true;
+      } else if(!isEmailValid(data.email.value)) {
+        setEmailError('Your email is invalid.');
+
+        return true;
+      } else {
+        setEmailError('');
+
+        return false;
+      }
+
+    if(data.password)
+      if(data.password.value.length < 1) {
+        setPasswordError('Your password cannot be empty.');
+
+        return true;
+      } else {
+        setPasswordError('');
+
+        return false;
+      }
+  };
+
   return (
     <main className="h-[100svh] flex flex-col justify-center items-center">
       <Header pageTitle="Login" />
+
+      {serverError !== '' && (
+        <Callout
+          className="max-w-md w-full mb-12"
+          color="rose"
+          title="Error"
+        >
+          <pre>
+            { serverError }
+          </pre>
+        </Callout>
+      )}
 
       <Card className="max-w-md mb-12">
         <Image className="mb-5 mx-auto" width={64} height={64} src="/logo.svg" alt="Craftlytics Logo" />
@@ -29,11 +144,11 @@ export default function Login() {
         <Title className="text-center">Craftlytics</Title>
         <Text className="text-center">Login to your account</Text>
 
-        <form className="mt-6">
-          <TextInput className="mb-3" icon={InboxIcon} type="email"    name="email"    placeholder="E-Mail" />
-          <TextInput className="mb-3" icon={KeyIcon}   type="password" name="password" placeholder="Password" />
+        <form className="mt-6" onSubmit={onSubmit}>
+          <TextInput onChange={(e) => hasErrors({ email: e.currentTarget })}    error={emailError !== ''}    errorMessage={emailError}    icon={InboxIcon}    type="text"     name="email"    placeholder="E-Mail"   className="mt-3" />
+          <TextInput onChange={(e) => hasErrors({ password: e.currentTarget })} error={passwordError !== ''} errorMessage={passwordError} icon={KeyIcon}      type="password" name="password" placeholder="Password" className="mt-3" />
 
-          <Button className="w-full mb-3">Login</Button>
+          <Button className="w-full my-3">Login</Button>
           <Text className="text-center"><Link href="/auth/reset"><Button variant="light">I forgot my password.</Button></Link></Text>
         </form>
 
@@ -64,7 +179,7 @@ export default function Login() {
         <Text className="text-center">Don&apos;t have an account yet? <Link href="/auth/register"><Button variant="light">Sign Up</Button></Link></Text>
       </Card>
 
-      <Text>Copyright &copy; 2023 TheClashFruit</Text>
+      <Text>Copyright &copy; { new Date().getFullYear() } TheClashFruit</Text>
     </main>
   );
 }

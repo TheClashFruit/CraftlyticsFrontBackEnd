@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Button,
+  Button, Callout,
   Card,
   Text,
   TextInput,
@@ -21,6 +21,10 @@ export default function Register() {
     <main className="h-[100svh] flex flex-col justify-center items-center">
       <Header pageTitle="Reset Password" />
 
+      <Callout className="max-w-md w-full mb-12" color="rose" title="Attention">
+        This feature is not yet implemented.
+      </Callout>
+
       <Card className="max-w-md mb-12">
         <Image className="mb-5 mx-auto" width={64} height={64} src="/logo.svg" alt="Craftlytics Logo" />
 
@@ -35,7 +39,7 @@ export default function Register() {
         </form>
       </Card>
 
-      <Text>Copyright &copy; 2023 TheClashFruit</Text>
+      <Text>Copyright &copy; { new Date().getFullYear() } TheClashFruit</Text>
     </main>
   );
 }

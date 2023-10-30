@@ -30,12 +30,6 @@ export default function Register() {
   const router = useRouter();
 
   const [ isLoading, setIsLoading ]   = useState(false);
-  const [ hasErrored, setHasErrored ] = useState(false);
-
-  const [ isFullNameError, setIsFullNameError ] = useState(false);
-  const [ isUsernameError, setIsUsernameError ] = useState(false);
-  const [ isEmailError, setIsEmailError ]       = useState(false);
-  const [ isPasswordError, setIsPasswordError ] = useState(false);
 
   const [ fullNameError, setFullNameError ] = useState('');
   const [ usernameError, setUsernameError ] = useState('');
@@ -92,16 +86,12 @@ export default function Register() {
     } else {
       switch (data.code) {
         case 'ERR_EMAIL_USED':
-          setIsEmailError(true);
           setEmailError('This email is already in use.');
 
-          return true;
           break;
         case 'ERR_USERNAME_USED':
-          setIsUsernameError(true);
           setUsernameError('This username is already in use.');
 
-          return true;
           break;
         default:
           setServerError(JSON.stringify(data, null, 2));
@@ -185,12 +175,13 @@ export default function Register() {
 
       {serverError !== '' && (
         <Callout
-          className="mb-12"
-          title="Internal Server Error"
-          icon={ExclamationIcon}
+          className="max-w-md w-full mb-12"
           color="rose"
+          title="Error"
         >
-          { serverError }
+          <pre>
+            { serverError }
+          </pre>
         </Callout>
       )}
 
@@ -211,7 +202,7 @@ export default function Register() {
         </form>
       </Card>
 
-      <Text>Copyright &copy; 2023 TheClashFruit</Text>
+      <Text>Copyright &copy; { new Date().getFullYear() } TheClashFruit</Text>
     </main>
   );
 }

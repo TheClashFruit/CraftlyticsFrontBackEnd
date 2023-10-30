@@ -3,6 +3,7 @@ import snowflake from '@/lib/snowflake';
 import bcrypt from 'bcrypt';
 import * as jose from 'jose';
 import User from '@/models/User';
+import {isEmailValid} from '@/lib/validationTools';
 
 export default async function handler(req, res) {
   const { fullname, username, email, password } = req.body;
@@ -45,6 +46,17 @@ export default async function handler(req, res) {
     res.json({
       error: 1,
       code: 'ERR_EMAIL_MISSING'
+    });
+
+    return;
+  }
+
+  if (!isEmailValid(email)) {
+    res.status(400);
+
+    res.json({
+      error: 1,
+      code: 'ERR_EMAIL_INVALID'
     });
 
     return;
