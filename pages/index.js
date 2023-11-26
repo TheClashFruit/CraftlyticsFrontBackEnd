@@ -162,7 +162,7 @@ export default function Home() {
                   </div>
 
                   <Text>
-                    It's easy to get started with our mod api.
+                    It&apos;s easy to get started with our mod api.
                   </Text>
                 </Card>
               </Col>
@@ -174,7 +174,7 @@ export default function Home() {
                   </div>
 
                   <Text>
-                    You don't need a server to get started. It's all hosted by us.
+                    You don&apos;t need a server to get started. It&apos;s all hosted by us.
                   </Text>
                 </Card>
               </Col>
